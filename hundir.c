@@ -112,6 +112,7 @@ int posicionEnTablero(int posi1, int posi2, int posj1, int posj2)
     }
     return 1;
 }
+//Declaracion funcion para la creacion de los tableros de juego en blanco.
 void crearTablero(char mat[DIM][DIM])
 {
     int i,j;
