@@ -1,27 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+//Constante que determina el tamaño del tablero de juego(Matriz DIMxDIM)
 #define DIM 11
+//Vector que contiene la cantidad de barcos segun su tamaño. El tamaño vendrà dado por la posicion en el vector y la cantidad de
+//barcos por el numero que se encuentra en la posicion. P. ej.: barcos[1] --> 4 barcos de 1 casilla.
+#define BARCOS {0,4,3,2,1,1}
+//Constante con la cantidad de barcos diferentes que hay mas uno ya que la posicion '0' no se utilizara.
+#define DIFBARCOS 6
+#define TOTALBARCOS 11
 
 //Declaracion funcion para comprobar la disponibilidad de la posicion elegida para el barco.
-int espacioDispo(int posIin, int posIfin, int posJin, int posJfin, char mat[DIM][DIM])
+int espacioDispo(int posi1, int posi2, int posj1, int posj2, char mat[DIM][DIM])
 {
-    int i, j, aux;
-    if(posIin>posIfin)
+    int i, j;
+
+    for(i=posi1; i<=posi2; i++)
     {
-        aux=posIin;
-        posIin=posIfin;
-        posIfin=aux;
-    }
-    if(posJin>posJfin)
-    {
-        aux=posJin;
-        posJin=posJfin;
-        posJfin=aux;
-    }
-    for(i=posIin; i<=posIfin; i++)
-    {
-        for(j=posJin; j<=posJfin; j++)
+        for(j=posj1; j<=posj2; j++)
         {
             if(mat[i][j]!=' ')
             {
@@ -63,27 +59,28 @@ int letraxnum(char letra)
 
 //Declaracion funcion para dejar libres las casillas alrededor del barco. Las rellenaremos con "agua".
 //Llamamos a la funcion con la posicion inicial y final del barco junto con la matriz del jugador.
-void agua(int posIin, int posIfin, int posJin, int posJfin, char mat[DIM][DIM])
+void agua(int posi1, int posi2, int posj1, int posj2, char mat[DIM][DIM])
 {
     int i,j;
-    for(i=(posIin-1); i<(posIfin+2); i++)
+
+    for(i=(posi1-1); i<(posi2+2); i++)
     {
         if(i>0 && i<DIM)
         {
-            for(j=(posJin-1); j<(posJfin+2); j++)
+            for(j=(posj1-1); j<(posj2+2); j++)
             {
                 if (j>0 && j<DIM)
                 {
-                    if(posIin==posIfin)
+                    if(posi1==posi2)
                     {
-                        if(i!=posIin || j<posJin || j>posJfin)
+                        if(i!=posi1 || j<posj1 || j>posj2)
                         {
                             mat[i][j]='~';
                         }
                     }
                     else
                     {
-                        if(j!=posJin || i<posIin || i>posIin)
+                        if(j!=posj1 || i<posi1 || i>posi2)
                         {
                             mat[i][j]='~';
                         }
@@ -112,6 +109,8 @@ int posicionEnTablero(int posi1, int posi2, int posj1, int posj2)
     }
     return 1;
 }
+
+
 //Declaracion funcion para la creacion de los tableros de juego en blanco.
 void crearTablero(char mat[DIM][DIM])
 {
@@ -150,6 +149,7 @@ void mostrar(char mat[DIM][DIM])
     int i, j;
     for (i=0; i<DIM; i++)
     {
+        printf("\t\t\t\t");
         for (j=0; j<DIM; j++)
         {
             printf("%c  ", mat[i][j]);
@@ -157,20 +157,49 @@ void mostrar(char mat[DIM][DIM])
         printf("\n");
     }
 }
+
+int comprobarBarco(int posi1, int posi2, int posj1, int posj2, int barcos1[])
+{
+    int i, j, tamano;
+    if (posi1 == posi2)
+    {
+        tamano = posj2 - posj1 + 1;
+    }
+    else
+    {
+        tamano = posi2 - posi1 + 1;
+    }
+    if (tamano > 5)
+    {
+        return (-1);
+    }
+    else
+    {
+        if (barcos1[tamano] != 0)
+        {
+            return (1);
+        }
+        else
+        {
+            return (-2);
+        }
+    }
+}
+
 void main()
 {
     char tableroA1[DIM][DIM], tableroA2[DIM][DIM],tableroB1[DIM][DIM],tableroB2[DIM][DIM];
-    int posi1, posi2, posj1, posj2, posOk;
-    int x;
+    int posi1, posi2, posj1, posj2, posOk, barcOK;
+    int x, aux;
     char letra;
+    int barcosJugador1[DIFBARCOS]=BARCOS, barcosJugador2[DIFBARCOS]=BARCOS;
+
     crearTablero(tableroA1);
     crearTablero(tableroA2);
     crearTablero(tableroB1);
     crearTablero(tableroB2);
-    posOk=1;
 
     printf("Inicio primer jugador.\n");
-
     //scanf("%c", &letra);
     do
     {
@@ -182,23 +211,57 @@ void main()
         printf("Introduce posicion de fin.\n");
         scanf("%c%d", &letra, &posj2);
         posi2=letraxnum(letra);
+        if(posi1>posi2)
+        {
+            aux=posi1;
+            posi1=posi2;
+            posi2=aux;
+        }
+        if(posj1>posj2)
+        {
+            aux=posj1;
+            posj1=posj2;
+            posj2=aux;
+        }
         posOk=posicionEnTablero(posi1, posi2, posj1, posj2);
         if(posOk==-1)
         {
             printf("El barco no puede estar fuera del tablero.\n");
             system("pause");
         }
-        if(posOk==-2)
+        else if(posOk==-2)
         {
             printf("No se pueden colocar barcos en diagonal.\n");
             system("pause");
         }
+        else
+        {
+            barcOK=comprobarBarco(posi1, posi2, posj1, posj2,barcosJugador1);
+            if (barcOK==-1)
+            {
+                printf("No existen barcos tan grandes.\n");
+            }
+            else if
+            {
+            printf("No quedan barcos de ese tamaño a introducir.\n");
+            }
+            else
+            {
+                posOk=espacioDispo(posi1, posi2, posj1, posj2, tableroA1);
+                if(posOk==-1)
+                {
+                    printf("No se puede colocar el barco en esta posicion. (Recuerda que los barcos no pueden tocarse.)");
+                }
+            }
+        }
     }
     while(posOk!=1);
 
-
     agua(posi1, posi2, posj1, posj2, tableroA1);
     mostrar(tableroA1);
+    mostrar(tableroA2);
+    mostrar(tableroB1);
+    mostrar(tableroB2);
     /*x=letraxnum(letra);*/
     //printf("%d", x);
 }
