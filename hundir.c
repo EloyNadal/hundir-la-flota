@@ -12,14 +12,17 @@
 
 
 //Declaracion funcion para colocar barcos
-void colocarBarcos(int posi1, int posi2, int posj1, int posj2, char mat[DIM][DIM])
+void colocarBarcos(int posi1, int posi2, int posj1, int posj2, char mat[DIM][DIM], int vbarcos[])
 {
-    int i, j;
+    int i, j, cont;
+    cont=0;
     if(posi1==posi2)
     {
         i=posi1;
-        for(j=posj1; j<=posj2; j++){
+        for(j=posj1; j<=posj2; j++)
+        {
             mat[i][j]='O';
+            cont++;
         }
     }
     else
@@ -28,8 +31,10 @@ void colocarBarcos(int posi1, int posi2, int posj1, int posj2, char mat[DIM][DIM
         for(i=posi1; i<=posi2; i++)
         {
             mat[i][j]='O';
+            cont++;
         }
     }
+    vbarcos[cont]=vbarcos[cont]-1;
 }
 //Declaracion funcion para comprobar la disponibilidad de la posicion elegida para el barco.
 int espacioDispo(int posi1, int posi2, int posj1, int posj2, char mat[DIM][DIM])
@@ -179,6 +184,20 @@ void mostrar(char mat[DIM][DIM])
     }
 }
 
+void rellenarAgua(char mat[DIM][DIM])
+{
+    int i, j;
+    for(i=1; i<DIM; i++)
+    {
+        for(j=1; j<DIM; j++)
+        {
+            if(mat[i][j]==' ')
+            {
+                mat[i][j]='~';
+            }
+        }
+    }
+}
 int comprobarBarco(int posi1, int posi2, int posj1, int posj2, int barcos1[])
 {
     int i, j, tamano;
@@ -211,75 +230,93 @@ void main()
 {
     char tableroA1[DIM][DIM], tableroA2[DIM][DIM],tableroB1[DIM][DIM],tableroB2[DIM][DIM];
     int posi1, posi2, posj1, posj2, posOk, barcOK;
-    int x, aux;
+    int x, aux, totbarcosj1, totbarcosj2;
     char letra;
     int barcosJugador1[DIFBARCOS]=BARCOS, barcosJugador2[DIFBARCOS]=BARCOS;
-
+    totbarcosj1=0;
+    totbarcosj2=0;
     crearTablero(tableroA1);
     crearTablero(tableroA2);
     crearTablero(tableroB1);
     crearTablero(tableroB2);
 
     printf("Inicio primer jugador.\n");
-    do
+    while(totbarcosj1!=TOTALBARCOS)
     {
+        do
+        {
 
-        printf("Introduce posicion donde empieza el barco.\n");
-        scanf("%c%d", &letra, &posj1);
-        posi1=letraxnum(letra);
-        fflush(stdin);
-        printf("Introduce posicion de fin.\n");
-        scanf("%c%d", &letra, &posj2);
-        posi2=letraxnum(letra);
-        if(posi1>posi2)
-        {
-            aux=posi1;
-            posi1=posi2;
-            posi2=aux;
-        }
-        if(posj1>posj2)
-        {
-            aux=posj1;
-            posj1=posj2;
-            posj2=aux;
-        }
-        posOk=posicionEnTablero(posi1, posi2, posj1, posj2);
-        if(posOk==-1)
-        {
-            printf("El barco no puede estar fuera del tablero.\n");
-            system("pause");
-        }
-        else if(posOk==-2)
-        {
-            printf("No se pueden colocar barcos en diagonal.\n");
-            system("pause");
-        }
-        else
-        {
-            barcOK=comprobarBarco(posi1, posi2, posj1, posj2,barcosJugador1);
-            if (barcOK==-1)
+            printf("Introduce posicion donde empieza el barco.\n");
+            scanf("%c%d", &letra, &posj1);
+            posi1=letraxnum(letra);
+            fflush(stdin);
+            printf("Introduce posicion de fin.\n");
+            scanf("%c%d", &letra, &posj2);
+            posi2=letraxnum(letra);
+            fflush(stdin);
+            if(posi1>posi2)
             {
-                printf("No existen barcos tan grandes.\n");
+                aux=posi1;
+                posi1=posi2;
+                posi2=aux;
             }
-            else if(barcOK==-2)
+            if(posj1>posj2)
             {
-                printf("No quedan barcos de ese tamaño a introducir.\n");
+                aux=posj1;
+                posj1=posj2;
+                posj2=aux;
+            }
+            posOk=posicionEnTablero(posi1, posi2, posj1, posj2);
+            if(posOk==-1)
+            {
+                printf("El barco no puede estar fuera del tablero.\n");
+                system("pause");
             }
             else
             {
-                posOk=espacioDispo(posi1, posi2, posj1, posj2, tableroA1);
-                if(posOk==-1)
+                if(posOk==-2)
                 {
-                    printf("No se puede colocar el barco en esta posicion. (Recuerda que los barcos no pueden tocarse.)");
+                    printf("No se pueden colocar barcos en diagonal.\n");
+                    system("pause");
+                }
+
+                else
+                {
+                    barcOK=comprobarBarco(posi1, posi2, posj1, posj2,barcosJugador1);
+                    if (barcOK==-1)
+                    {
+                        printf("No existen barcos tan grandes.\n");
+                    }
+                    else
+                    {
+                        if(barcOK==-2)
+                        {
+                            printf("No quedan barcos de ese tamaño a introducir.\n");
+                        }
+                        else
+                        {
+                            posOk=espacioDispo(posi1, posi2, posj1, posj2, tableroA1);
+                            if(posOk==-1)
+                            {
+                                printf("No se puede colocar el barco en esta posicion. (Recuerda que los barcos no pueden tocarse.)");
+                            }
+                        }
+                    }
                 }
             }
+
         }
+        while(posOk!=1 || barcOK!=1);
+
+        colocarBarcos(posi1, posi2, posj1, posj2, tableroA1, barcosJugador1);
+        agua(posi1, posi2, posj1, posj2, tableroA1);
+        totbarcosj1++;
     }
-    while(posOk!=1);
-    colocarBarcos(posi1, posi2, posj1, posj2, tableroA1);
-    agua(posi1, posi2, posj1, posj2, tableroA1);
+    rellenarAgua(tableroA1);
     mostrar(tableroA1);
-    mostrar(tableroA2);
-    mostrar(tableroB1);
-    mostrar(tableroB2);
+//    mostrar(tableroA2);
+//    mostrar(tableroB1);
+//    mostrar(tableroB2);
 }
+
+
