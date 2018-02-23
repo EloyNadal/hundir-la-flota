@@ -10,6 +10,27 @@
 #define DIFBARCOS 6
 #define TOTALBARCOS 11
 
+
+//Declaracion funcion para colocar barcos
+void colocarBarcos(int posi1, int posi2, int posj1, int posj2, char mat[DIM][DIM])
+{
+    int i, j;
+    if(posi1==posi2)
+    {
+        i=posi1;
+        for(j=posj1; j<=posj2; j++){
+            mat[i][j]='O';
+        }
+    }
+    else
+    {
+        j=posj1;
+        for(i=posi1; i<=posi2; i++)
+        {
+            mat[i][j]='O';
+        }
+    }
+}
 //Declaracion funcion para comprobar la disponibilidad de la posicion elegida para el barco.
 int espacioDispo(int posi1, int posi2, int posj1, int posj2, char mat[DIM][DIM])
 {
@@ -200,10 +221,9 @@ void main()
     crearTablero(tableroB2);
 
     printf("Inicio primer jugador.\n");
-    //scanf("%c", &letra);
     do
     {
-        //system("cls");
+
         printf("Introduce posicion donde empieza el barco.\n");
         scanf("%c%d", &letra, &posj1);
         posi1=letraxnum(letra);
@@ -241,9 +261,9 @@ void main()
             {
                 printf("No existen barcos tan grandes.\n");
             }
-            else if
+            else if(barcOK==-2)
             {
-            printf("No quedan barcos de ese tamaño a introducir.\n");
+                printf("No quedan barcos de ese tamaño a introducir.\n");
             }
             else
             {
@@ -256,13 +276,10 @@ void main()
         }
     }
     while(posOk!=1);
-
+    colocarBarcos(posi1, posi2, posj1, posj2, tableroA1);
     agua(posi1, posi2, posj1, posj2, tableroA1);
     mostrar(tableroA1);
     mostrar(tableroA2);
     mostrar(tableroB1);
     mostrar(tableroB2);
-    /*x=letraxnum(letra);*/
-    //printf("%d", x);
 }
-
