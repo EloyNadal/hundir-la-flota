@@ -357,20 +357,20 @@ void main()
 
                 else
                 {
-                    barcOK=comprobarBarco(posi1, posi2, posj1, posj2,barcosJugador1);
-                    if (barcOK==-1)
+                    barcOk=comprobarBarco(posi1, posi2, posj1, posj2,barcosJugador1);
+                    if (barcOk==-1)
                     {
                         printf("No existen barcos tan grandes.\n");
                     }
                     else
                     {
-                        if(barcOK==-2)
+                        if(barcOk==-2)
                         {
                             printf("No quedan barcos de ese tamaño a introducir.\n");
                         }
                         else
                         {
-                            posOk=espacioDispo(posi1, posi2, posj1, posj2, tablero1);
+                            posOk=espacioDispo(posi1, posi2, posj1, posj2, tablero1A);
                             if(posOk==-1)
                             {
                                 printf("No se puede colocar el barco en esta posicion. (Recuerda que los barcos no pueden tocarse.)");
@@ -381,7 +381,7 @@ void main()
             }
 
         }
-        while(posOk!=1 || barcOK!=1);
+        while(posOk!=1 || barcOk!=1);
 
         colocarBarcos(posi1, posi2, posj1, posj2, tablero1A, barcosJugador1);
         agua(posi1, posi2, posj1, posj2, tablero1A);
@@ -441,14 +441,14 @@ void main()
 
                 else
                 {
-                    barcOK=comprobarBarco(posi1, posi2, posj1, posj2, barcosJugador2);
-                    if (barcOK==-1)
+                    barcOk=comprobarBarco(posi1, posi2, posj1, posj2, barcosJugador2);
+                    if (barcOk==-1)
                     {
                         printf("No existen barcos tan grandes.\n");
                     }
                     else
                     {
-                        if(barcOK==-2)
+                        if(barcOk==-2)
                         {
                             printf("No quedan barcos de ese tamaño a introducir.\n");
                         }
@@ -465,7 +465,7 @@ void main()
             }
 
         }
-        while(posOk!=1 || barcOK!=1);
+        while(posOk!=1 || barcOk!=1);
 
         colocarBarcos(posi1, posi2, posj1, posj2, tablero2A, barcosJugador2);
         agua(posi1, posi2, posj1, posj2, tablero2A);
@@ -550,7 +550,7 @@ void main()
     }
     else
     {
-        printf("\t\t\t\tEl jugador 2 ha ganado! Felicidades!")
+        printf("\t\t\t\tEl jugador 2 ha ganado! Felicidades!");
     }
 }
 
