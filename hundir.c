@@ -54,7 +54,7 @@ void main()
             fflush(stdin);
             if(letra=='s'||letra=='S')
             {
-                mostrar(tablero1A);
+                mostrar(tablero1A, barcosJugador1);
             }
             printf("Introduce posicion donde empieza el barco.\n");
             scanf("%c%d", &letra, &posj1);
@@ -137,7 +137,7 @@ void main()
             fflush(stdin);
             if(letra=='s'||letra=='S')
             {
-                mostrar(tablero2A);
+                mostrar(tablero2A, barcosJugador2);
             }
             printf("Introduce posicion donde empieza el barco.\n");
             scanf("%c%d", &letra, &posj1);
@@ -222,7 +222,7 @@ void main()
         {
             printf("Turno del jugador 1.\n");
             printf("Dispara!\n");
-            mostrar(tablero1B);
+            mostrar(tablero1B, barcosJugador1);
             scanf("%c%d", &letra, &posj1);
             posi1=letraxnum(letra);
             fflush(stdin);
@@ -243,7 +243,7 @@ void main()
                     printf("Tocado y hundido!\n");
                     totbarcosj2--;
                 }
-                mostrar(tablero1B);
+                mostrar(tablero1B, barcosJugador1);
                 aux++;
             }
             else
@@ -253,7 +253,7 @@ void main()
         }
         while(aux%2==1)
         {
-            mostrar(tablero2B);
+            mostrar(tablero2B, barcosJugador2);
             printf("Turno del jugador 2.\n");
             printf("Dispara!\n");
             scanf("%c%d", &letra, &posj1);
@@ -276,7 +276,7 @@ void main()
                     printf("Tocado y hundido!\n");
                     totbarcosj1--;
                 }
-                mostrar(tablero2B);
+                mostrar(tablero2B, barcosJugador2);
                 aux++;
             }
             else
@@ -455,18 +455,36 @@ void crearTablero(char mat[DIM][DIM])
     }
 }
 //Definicion funcion para mostrar tablero por pantalla.
-void mostrar(char mat[DIM][DIM])
+void mostrar(char mat[DIM][DIM], int barcosJugador[])
 {
     int i, j;
+    char datos[DIM][20] = {{" JUGADOR:"},
+			 {" ---------"},
+			 {" BARCOS RESTANTES:"},
+			 {" Bote (1p):"},
+			 {" Submarino(2p):"},
+			 {" Buque(3p):"},
+			 {" Portaaviones(4p):"}};
+	
     for (i=0; i<DIM; i++)
     {
-        printf("\t\t\t\t");
+
+	for (j=0; j<20; j++)
+        {
+            printf("%c", datos[i][j]);
+        }
+        if (i > 2 && i < 7)
+        {
+        	printf(" %d", barcosJugador[i - 2]);
+        }
+        printf("\t\t\t");
         for (j=0; j<DIM; j++)
         {
             printf("%c  ", mat[i][j]);
         }
         printf("\n");
     }
+    printf("\n");
 }
 //Definicion funcion para rellenar resto del tablero con agua. Se llama a la funcion una vez colocados todos los barcos.
 void rellenarAgua(char mat[DIM][DIM])
@@ -495,7 +513,7 @@ int comprobarBarco(int posi1, int posi2, int posj1, int posj2, int barcos[])
     {
         tamano = posi2 - posi1 + 1;
     }
-    if (tamano > 5)
+    if (tamano > 4)
     {
         return (-1);
     }
